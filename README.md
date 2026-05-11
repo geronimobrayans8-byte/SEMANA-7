@@ -1,4 +1,5 @@
 # SEMANA-7
+#EJERCICIO 1
 
 import numpy as np
 import pandas as pd
@@ -57,3 +58,67 @@ tabla = pd.DataFrame({
 print("TABLA DE RESULTADOS Y ERRORES PORCENTUALES:")
 print("-" * 80)
 print(tabla.to_string(index=False))
+
+
+
+
+#EJERCICIO 2
+
+import numpy as np
+import pandas as pd
+
+# 1. Definir los datos de x
+x_datos = np.array([1.5, 1.9, 2.1, 2.4, 2.6, 3.1])
+
+# Asumimos que seguimos usando f(x) = e^x para rellenar la tabla.
+# Si tu profesor te dio otros valores de f(x), simplemente reemplaza este array 
+# con tus datos, por ejemplo: y_datos = np.array([4.48, 6.68, ...])
+y_datos = np.exp(x_datos)
+
+# Mostrar la tabla generada
+tabla = pd.DataFrame({'x': x_datos, 'f(x)': y_datos})
+print("TABLA DE DATOS GENERADA:")
+print("-" * 35)
+print(tabla.to_string(index=False))
+print("\n")
+
+# 2. El punto donde queremos calcular las derivadas
+x_objetivo = 2.25
+
+# 3. Encontrar los 3 puntos más cercanos a x = 2.25
+# Calculamos la distancia de cada x al 2.25 y elegimos los 3 más cercanos
+distancias = np.abs(x_datos - x_objetivo)
+indices_cercanos = np.argsort(distancias)[:3]
+
+# Extraemos esos 3 puntos (x y sus respectivos f(x))
+x_cercanos = x_datos[indices_cercanos]
+y_cercanos = y_datos[indices_cercanos]
+
+print("PUNTOS SELECCIONADOS PARA INTERPOLACIÓN:")
+print("-" * 35)
+print(f"Valores x: {x_cercanos}")
+print(f"Valores y: {y_cercanos}\n")
+
+# 4. Ajustar un polinomio de grado 2 (parábola) a esos 3 puntos
+# np.polyfit nos devuelve los coeficientes a, b y c de la ecuación ax^2 + bx + c
+coeficientes = np.polyfit(x_cercanos, y_cercanos, 2)
+a, b, c = coeficientes
+
+# 5. Calcular las derivadas usando el polinomio ajustado
+# Si P(x)  = ax^2 + bx + c
+# Entonces P'(x) = 2ax + b
+# Y P''(x) = 2a
+
+f_prima_aprox = 2 * a * x_objetivo + b
+f_biprima_aprox = 2 * a
+
+print("RESULTADOS SOLICITADOS:")
+print("-" * 35)
+print(f"f'(2.25) aproximado  = {f_prima_aprox:.6f}")
+print(f"f''(2.25) aproximado = {f_biprima_aprox:.6f}")
+
+# Extra: Comparamos con el valor real para ver qué tan buena fue la aproximación
+valor_real_exacto = np.exp(x_objetivo)
+print(f"\n(Nota: Si f(x) = e^x, el valor analítico exacto de ambas derivadas en x=2.25 es {valor_real_exacto:.6f})")
+
+
